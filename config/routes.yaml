@@ -1,0 +1,64 @@
+# Routes test
+list_users:
+  path: /test/users
+  controller: App\Controller\UserController::getUsers
+
+list_admins:
+  path: /test/admins
+  controller: App\Controller\UserController::getAdmins
+
+login:
+  path: /
+  controller: App\Controller\SecurityController::login
+
+logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
+
+dashboard:
+  path: /dashboard
+  controller: App\Controller\DashboardController::index
+
+pets_dashboard:
+  path: /dashboard/pets
+  controller: App\Controller\DashboardController::pets
+
+connexions_dashboard:
+  path: /dashboard/connexions
+  controller: App\Controller\DashboardController::connexions
+
+# Ajax routes
+users_count:
+  path: /users/count
+  controller: App\Controller\UserController::getUsersCount
+  methods: GET
+
+users_count_per_day:
+  path: /users/count/day
+  controller: App\Controller\UserController::getnewUserNumberByDay
+  methods: POST
+
+users_by_age:
+  path: /users/count/age
+  controller: App\Controller\UserController::getUserByAge
+  methods: GET
+
+users:
+  path: /users
+  controller: App\Controller\UserController::getAllUsers
+  methods: GET
+
+add_user:
+  path: /users/add
+  controller: App\Controller\UserController::addUser
+  methods: POST|GET
+
+edit_user:
+  path: /users/edit/{id}
+  controller: App\Controller\UserController::editUser
+  methods: POST|GET
+
+remove_user:
+  path: /users/remove/{id}
+  controller: App\Controller\UserController::removeUser
+  methods: DELETE
