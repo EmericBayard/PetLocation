@@ -6,6 +6,7 @@ list_users:
 list_admins:
   path: /test/admins
   controller: App\Controller\UserController::getAdmins
+# End routes test
 
 login:
   path: /
@@ -33,11 +34,62 @@ users_count:
   controller: App\Controller\UserController::getUsersCount
   methods: GET
 
+# New users by period
 users_count_per_day:
   path: /users/count/day
   controller: App\Controller\UserController::getnewUserNumberByDay
   methods: POST
 
+users_count_per_week:
+  path: /users/count/week
+  controller: App\Controller\UserController::getnewUserNumberByWeek
+  methods: POST
+
+users_count_per_month:
+  path: /users/count/month
+  controller: App\Controller\UserController::getnewUserNumberByMonth
+  methods: POST
+
+users_count_per_year:
+  path: /users/count/year
+  controller: App\Controller\UserController::getnewUserNumberByYear
+  methods: POST
+
+# Count users by place
+users_count_per_city:
+  path: /users/count/city
+  controller: App\Controller\UserController::getNbUsersByCity
+  methods: POST
+
+users_count_per_zip:
+  path: /users/count/zip
+  controller: App\Controller\UserController::getNbUsersByZip
+  methods: POST
+
+users_count_per_country:
+  path: /users/count/country
+  controller: App\Controller\UserController::getNbUsersByCountry
+  methods: POST
+
+# Sexe
+users_count_per_sex:
+  path: /users/count/sex
+  controller: App\Controller\UserController::getNbUsersBySex
+  methods: POST
+
+# Active
+users_count_per_active:
+  path: /users/count/active
+  controller: App\Controller\UserController::getNbUsersByActive
+  methods: POST
+
+# Subscriptions
+users_count_per_subscriptions:
+  path: /users/count/subscriptions
+  controller: App\Controller\UserController::getNbSubscriptionsUsersByActive
+  methods: POST
+
+# Age
 users_by_age:
   path: /users/count/age
   controller: App\Controller\UserController::getUserByAge
@@ -48,6 +100,7 @@ users:
   controller: App\Controller\UserController::getAllUsers
   methods: GET
 
+# CRUD
 add_user:
   path: /users/add
   controller: App\Controller\UserController::addUser
@@ -61,4 +114,4 @@ edit_user:
 remove_user:
   path: /users/remove/{id}
   controller: App\Controller\UserController::removeUser
-  methods: DELETE
+  methods: GET

@@ -2,6 +2,15 @@
 
 {% block title %}{{ parent() }} Dashboard | Users{% endblock %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    ul.pagination {
+      justify-content: flex-end;
+    }
+  </style>
+{% endblock %}
+
 {% block body %}
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -11,18 +20,6 @@
               <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
           </li>
         </ul>
-
-    <!-- SEARCH FORM -->
-    {# <form class="form-inline ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form> #}
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -36,7 +33,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+              <img src="/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Brad Diesel
@@ -52,7 +49,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src="/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   John Pierce
@@ -68,7 +65,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src="/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Nora Silvester
@@ -152,22 +149,18 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="#" class="nav-link active">
-                  {# <i class="far fa-circle nav-icon"></i> #}
-                  {# <i class="fas fa-user nav-icon"></i> #}
                   <i class="far fa-user nav-icon"></i>
                   <p>Users</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ path('pets_dashboard') }}" class="nav-link">
-                  {# <i class="far fa-circle nav-icon"></i> #}
                   <i class="fas fa-cat nav-icon"></i>
                   <p>Pets</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ path('connexions_dashboard') }}" class="nav-link">
-                  {# <i class="far fa-circle nav-icon"></i> #}
                   <i class="fas fa-wifi nav-icon"></i>
                   <p>Connexions</p>
                 </a>
@@ -175,7 +168,6 @@
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="fas fa-money-check-alt nav-icon"></i>
-                  {# <i class="far fa-circle nav-icon"></i> #}
                   <p>Factures</p>
                 </a>
               </li>
@@ -183,7 +175,6 @@
           </li>
           <li class="nav-item">
             <a href="{{ path('logout') }}" class="nav-link">
-              {# <i class="nav-icon fas fa-th"></i> #}
               <i class=" nav-icon fas far fa-sign-out-alt"></i>
               <p>
                 Déconnexion
@@ -227,13 +218,14 @@
             <div class="small-box bg-info">
               <div class="inner">
                 <h3 id="newUsers"></h3>
-
-                <p>Nouveaux utilisateurs</p>
+                <p>Nouveaux utilisateurs total</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+              
             </div>
           </div>
           <!-- ./col -->
@@ -241,15 +233,38 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                {# <h3>647 000<sup style="font-size: 20px">%</sup></h3> #}
-                <h3 id="newUsersPerDay"></h3>
-
-                <p>Nouveaux utilisateurs aujourd'hui</p>
+                <h3 id="newUsersPerPeriod"></h3>
+                <p id="p_newUsersPerPeriod">Nouveaux utilisateurs</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info<i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>Jour
+                  <span class="float-right text-muted text-sm"><input id="day" placeholder="YYYY-mm-dd" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>Semaine
+                  <span class="float-right text-muted text-sm"><input id="week" placeholder="1er jour de la semaine" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>Mois
+                  <span class="float-right text-muted text-sm"><input id="month" placeholder="1er jour du mois" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-file mr-2"></i>Année
+                  <span class="float-right text-muted text-sm"><input id="year" placeholder="1er jour de l'année" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" id="newUserCritere" class="dropdown-item dropdown-footer">Submit</a>
+              </div>
             </div>
           </div>
           <!-- ./col -->
@@ -257,15 +272,33 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>44</h3>
-
-                <p>Nb d'abonnements par utilisateur actif</p>
+                <h3 id="nbUserByPlace"></h3>
+                <p id="p_nbUserByPlace">Nombre d'utilisateurs</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>Ville
+                  <span class="float-right text-muted text-sm"><input id="ville" placeholder="Ville" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>Commune
+                  <span class="float-right text-muted text-sm"><input id="commune" placeholder="Code postal" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>Pays
+                  <span class="float-right text-muted text-sm"><input id="pays" placeholder="Pays" type="text"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" id="place_criteres" class="dropdown-item dropdown-footer">Submit</a>
+              </div>
             </div>
           </div>
           <!-- ./col -->
@@ -273,16 +306,112 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>3h18mn</h3>
-
-                <p>Temps moyen d'abonnement</p>
+                <h3 id="nbUserBySex"></h3>
+                <p id="p_nbUserBySex">Nombre d'utilisateurs par sexe</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="homme">Homme</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="femme">Femme</span>
+                </a>
+              </div>
             </div>
           </div>
+          <!-- ./col -->
+        </div>
+        <!-- Small boxes (Stat box) Second line -->
+        <div class="row">
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3 id="nb_users_active"></h3>
+                <p id="p_nb_users_active">Nb d'utilisateurs actifs/Inactifs</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info<i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="actif">Actif</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="inactif">Inactif</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3 id="nb_subscription_per_active_user"></h3>
+                <p id="p_nb_subscription_per_active_user">Nombre d'abonnements par utilisateur actif/inactif</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="subscription_actif">Actif</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="subscription_inactif">Inactif</span>
+                </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          {# <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3 id="nbUserBySex"></h3>
+                <p id="p_nbUserBySex">Nombre d'utilisateurs par sexe</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer" data-toggle="dropdown">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">Sélection</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-envelope mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="homme">Homme</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-users mr-2"></i>
+                  <span class="float-right text-muted text-sm" id="femme">Femme</span>
+                </a>
+              </div>
+            </div>
+          </div> #}
           <!-- ./col -->
         </div>
         <!-- /.row -->
@@ -315,7 +444,7 @@
                       {# {{ form_widget(form.dateCreatedAt) }} #}
                     </div>
                     <div class="col">
-                      <button class="btn btn-primary">Search</button>
+                      <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                   </div>
               </div>
@@ -327,20 +456,6 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="card col-md-12">
               <div class="">
-                {# <div class="container">
-                  {{ form_start(form) }}
-                  <div class="form-row">
-                    <div class="col">
-                      {{ form_row(form.email) }}
-                    </div>
-                    <div class="col">
-                      {{ form_row(form.dateCreatedAt) }}
-                    </div>
-                    <div class="col">
-                      <button class="btn btn-primary">Search</button>
-                    </div>
-                  </div>
-                </div> #}
               </div>
               <div class="card-header border-transparent">
                 <h3 class="card-title">Utilisateurs &nbsp;&nbsp;<a href="{{ path('add_user') }}" class="btn btn-xs btn-primary" title="ajouter un utilisateur"><i class="fas fa-plus-circle"></i></a></h3>
@@ -389,7 +504,8 @@
                         </td>
                         <td>
                           <a href="{{ path('edit_user', { 'id': user.iduser}) }}" class="btn btn-xs btn-success" title="editer"><i class="far fa-edit"></i></a>
-                          <a href="javascript:void(0)" class="btn btn-xs btn-danger" title="supprimer"><i class="far fa-trash-alt"></i></a>
+                          {# <a href="{{ path('remove_user', { 'id': user.iduser}) }}" title="supprimer"><i class="far fa-trash-alt"></i></a> #}
+                          <a href="#" id="{{ user.iduser }}" class="btn btn-xs btn-danger remove" title="supprimer"><i class="far fa-trash-alt"></i></a>
                         </td>
                       </tr>
                     {% endfor %}
@@ -401,16 +517,6 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                {# <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a> #}
-                {# <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> #}
-                {# <ul>      
-                    {% for p in range(1, nbTotalPages) %}
-                        <li{% if p == page %} class="active"{% endif %}>          
-                            <a href="{{ path('dashboard', {'page': p}) }}">{{ p }}</a>        
-                        </li>      
-                    {% endfor %}    
-                </ul>   #}
-                {# {{ knp_pagination_render(pagination) }} #}
                 <div class="navigation">
                     {{ knp_pagination_render(pagination) }}
                 </div>
@@ -495,6 +601,182 @@
   {{ parent() }}
 
   <script>
+
+    let nbUsersByPeriod = () => {
+      console.log($("#day").val())
+      
+      let period = moment().startOf('day').format();
+      let url = '/users/count/day';
+      let message = "Nouveaux utilisateurs today: " + moment(period).format("LL");
+
+      if ($("#day").val()) {
+        period = $("#day").val();
+        message = "Nouveaux utilisateurs au jour: " + period;
+      }
+      if ($("#week").val()) {
+        period = $("#week").val();
+        url = '/users/count/week';
+        message = "Nouveaux utilisateurs semaine débutant le " + period;
+      }
+      if ($("#month").val()) {
+        period = $("#month").val();
+        url = '/users/count/month';
+        message = "Nouveaux utilisateurs mois débutant le " + period;
+      }
+      if ($("#year").val()) {
+        period = $("#year").val();
+        url = '/users/count/year';
+        message = "Nouveaux utilisateurs année débutant le " + period;
+      }
+      
+      $.ajax({
+        
+        url : url,
+        type : 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          'period': period
+        }),
+        async: true,
+        success : function(response){
+          $("#newUsersPerPeriod").html(response[0]['COUNT(*)']);
+          $("#p_newUsersPerPeriod").html(message);
+        }
+      });
+    }
+
+    let nbUsersByPlace = () => {
+      
+      let place = 'France';
+      let url = '/users/count/country';
+      let message = "Nombre d'utilisateurs pour le pays: " + place;
+
+      if ($("#ville").val()) {
+        place = $("#ville").val();
+        message = "Nombre d'utilisateurs pour la ville: " + place;
+      }
+      if ($("#commune").val()) {
+        place = $("#commune").val();
+        url = '/users/count/zip';
+        message = "Nombre d'utilisateurs pour la commune: " + place;
+      }
+      if ($("#pays").val()) {
+        place = $("#pays").val();
+        url = '/users/count/country';
+        message = "Nombre d'utilisateurs pour le pays: " + place;
+      }
+      
+      $.ajax({
+        
+        url : url,
+        type : 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          'place': place
+        }),
+        async: true,
+        success : function(response){
+          $("#nbUserByPlace").html(response[0]['COUNT(*)']);
+          $("#p_nbUserByPlace").html(message);
+        }
+      });
+    }
+
+    let nbUsersBySex = (sex = 'Femme') => {
+      
+      let message = "Nombre d'utilisateurs par sexe: " + sex;
+      
+      $.ajax({
+        
+        url : '/users/count/sex',
+        type : 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          'sex': sex
+        }),
+        async: true,
+        success : function(response){
+          $("#nbUserBySex").html(response[0]['COUNT(*)']);
+          $("#p_nbUserBySex").html(message);
+        }
+      });
+    }
+
+    let nbUsersByActive = (active = 1) => {
+      
+      let message = "Nombre d'utilisateurs actifs";
+      if (!active ) message = "Nombre d'utilisateurs inactifs";
+      
+      $.ajax({
+        
+        url : '/users/count/active',
+        type : 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          'active': active
+        }),
+        async: true,
+        success : function(response){
+          $("#nb_users_active").html(response[0]['COUNT(*)']);
+          $("#p_nb_users_active").html(message);
+        }
+      });
+    }
+
+    let nbSubscriptionsUsersByActive = (active = 1) => {
+      
+      let message = "Nombre d'abonnements par utilisateurs actifs";
+      if (!active ) message = "Nombre d'abonnements par utilisateurs inactifs";
+      
+      $.ajax({
+        
+        url : '/users/count/subscriptions',
+        type : 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          'active': active
+        }),
+        async: true,
+        success : function(response){
+          $("#nb_subscription_per_active_user").html(response[0]['COUNT(*)']);
+          $("#p_nb_subscription_per_active_user").html(message);
+        }
+      });
+    }
+
+    $("#newUserCritere").click(function(){
+      nbUsersByPeriod();
+    });
+
+    $("#place_criteres").click(function(){
+      nbUsersByPlace();
+    });
+
+    $("#homme").click(function(){
+      nbUsersBySex($("#homme").html());
+    });
+
+     $("#femme").click(function(){
+      nbUsersBySex($("#femme").html());
+    });
+
+    $("#actif").click(function(){
+      nbUsersByActive(1);
+    });
+
+     $("#inactif").click(function(){
+      nbUsersByActive(0);
+    });
+
+    $("#subscription_actif").click(function(){
+      nbSubscriptionsUsersByActive(1);
+    });
+
+     $("#subscription_inactif").click(function(){
+      nbSubscriptionsUsersByActive(0);
+    });
+
+
     $( document ).ready(function() {
         
         $.ajax({
@@ -507,20 +789,12 @@
           }
         });
 
-        $.ajax({
-         
-          url : '/users/count/day',
-          type : 'POST',
-          dataType: 'json',
-          data: JSON.stringify({
-            'day': '2019-12-04'
-          }),
-          async: true,
-          success : function(response){
-            //console.log('count_per_day', response[0]);
-            $("#newUsersPerDay").html(response[0]['COUNT(*)']);
-          }
-        });
+        // Affichage par défaut
+        nbUsersByPeriod();
+        nbUsersByPlace();
+        nbUsersBySex();
+        nbUsersByActive();
+        nbSubscriptionsUsersByActive();
 
         /*$.ajax({
          
@@ -615,6 +889,43 @@
               options: options
           });
         }
+
+        // Remove user in ajax
+        $('a.remove').each(function() {
+          $(this).click(function(e) {
+            e.preventDefault();
+            $id = $(this).attr('id');
+            console.log($id);
+
+            bootbox.confirm({
+              title: "Suppression",
+              message: "Etes vous sûr de vouloir supprimer cet utilisateur ?",
+              buttons: {
+                  cancel: {
+                      label: '<i class="fa fa-times"></i> Annuler'
+                  },
+                  confirm: {
+                      label: '<i class="fa fa-check"></i> Supprimer'
+                  }
+              },
+              callback: function (result) {
+                  if (result) {
+                    // document.location.href = $href;
+                    console.log('ys');
+                     $.ajax({
+                      url : '/users/remove/'+$id,
+                      type : 'GET',
+                      success : function(response){
+                        location.href = '/dashboard';
+                      }
+                    });
+                  }
+              }
+              });
+          })
+        });
+
+        
 
         
 

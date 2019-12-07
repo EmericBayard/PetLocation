@@ -24,10 +24,18 @@ class UserSearchType extends AbstractType
 
             ])
             ->add('dateCreatedAt', DateType::class, [
-                'required' => false,
+                // 'required' => false,
+                // 'label' => false,
+                // 'attr' => [
+                //   'placeholder' => 'By createdAt date'
+                // ]
                 'label' => false,
+                'required' => false,
+                'widget' => 'single_text',
+                'html5' => false,
                 'attr' => [
-                  'placeholder' => 'By createdAt date'
+                  'class' => 'js-datepicker',
+                  'placeholder' => 'Date de création...'
                 ]
 
             ])

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\UserAddType;
+use App\Form\UserEditType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends ApiController {
@@ -36,7 +37,8 @@ class UserController extends ApiController {
 
     $content = $request->getContent();
     $params = json_decode($content, true);
-    $day = $params['day'];
+    // $day = $params['day'];
+    $day = $params['period'];
 
     $em = $this->getDoctrine()->getManager('customer');
     $query = "SELECT COUNT(*) FROM user WHERE createdAt > :day AND createdAt < :day + INTERVAL 1 DAY";
@@ -47,6 +49,158 @@ class UserController extends ApiController {
     // dd($result);
     return $this->responseApi($result);
     
+  }
+
+  public function getnewUserNumberByWeek(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $day = $params['period'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE createdAt > :day AND createdAt < :day + INTERVAL 7 DAY";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("day", $day);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    // dd($result);
+    return $this->responseApi($result);
+    
+  }
+
+  public function getnewUserNumberByMonth(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $day = $params['period'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE createdAt > :day AND createdAt < :day + INTERVAL 1 MONTH";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("day", $day);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    // dd($result);
+    return $this->responseApi($result);
+    
+  }
+
+  public function getnewUserNumberByYear(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $day = $params['period'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE createdAt > :day AND createdAt < :day + INTERVAL 1 YEAR";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("day", $day);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    // dd($result);
+    return $this->responseApi($result);
+    
+  }
+
+  // Count users by place
+  public function getNbUsersByCity(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $place = $params['place'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+
+    $query = "SELECT COUNT(*) FROM user WHERE city = :place";
+
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("place", $place);
+    $statement->execute();
+    $result = $statement->fetchAll();
+
+    return $this->responseApi($result);
+  }
+
+  public function getNbUsersByZip(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $place = $params['place'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE zip = :place";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("place", $place);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    
+    return $this->responseApi($result);
+  }
+
+  public function getNbUsersByCountry(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $place = $params['place'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE country = :place";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("place", $place);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    
+    return $this->responseApi($result);
+  }
+
+  public function getNbUsersBySex(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $sex = $params['sex'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+    $query = "SELECT COUNT(*) FROM user WHERE sexe = :sex";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("sex", $sex);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    
+    return $this->responseApi($result);
+  }
+  
+  public function getNbUsersByActive(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $active = $params['active'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+
+    $query = "SELECT COUNT(*) FROM user WHERE active = :active";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("active", $active);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    
+    return $this->responseApi($result);
+  }
+  
+  public function getNbSubscriptionsUsersByActive(Request $request, EntityManagerInterface $em) {
+
+    $content = $request->getContent();
+    $params = json_decode($content, true);
+    $active = $params['active'];
+
+    $em = $this->getDoctrine()->getManager('customer');
+
+    $query = "SELECT COUNT(*) FROM billing INNER JOIN user ON user_iduser = iduser WHERE billing.dateBilling < CURRENT_DATE AND user.active = :active";
+    $statement = $em->getConnection()->prepare($query);
+    $statement->bindValue("active", $active);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    
+    return $this->responseApi($result);
   }
 
   public function getUserByAge(Request $request, EntityManagerInterface $em) {
@@ -163,7 +317,7 @@ class UserController extends ApiController {
       $em = $this->getDoctrine()->getManager('customer');
       $user = $em->getRepository(User::class)->find($id);
       // dd($user);
-      $form = $this->createForm(UserAddType::class, $user);
+      $form = $this->createForm(UserEditType::class, $user);
       $form->handleRequest($request);
 
       if ($request->isXmlHttpRequest()) {
@@ -174,9 +328,13 @@ class UserController extends ApiController {
 
       if ($form->isSubmitted() && $form->isValid()) {
         $user = $form->getData();
-        $encoded = $encoder->encodePassword($user, $user->getPassword());
-        $user->setPassword($encoded);
-          // dd($user);
+        
+        $plainPassword = $form->get('plainPassword')->getData();
+        // dump($plainPassword);
+        if ($plainPassword != '') {
+          $user->setPassword($encoder->encodePassword($user, $plainPassword));
+        }
+        // dd($user);
         $em = $this->getDoctrine()->getManager('customer');
         $em->persist($user);
         $em->flush();
@@ -188,6 +346,30 @@ class UserController extends ApiController {
         'form' => $form->createView(),
         'loggedUser' => $loggedUser
       ]);
+    }
+
+    public function removeUser(Request $request, EntityManagerInterface $em, $id) {
+      
+      $loggedUser = $this->getUser();
+
+      if ($request->isXmlHttpRequest()) {
+        $em = $this->getDoctrine()->getManager('customer');
+        $user = $em->getRepository(User::class)->find($id);
+        // dd($user); 
+        $em->remove($user);
+        $em->flush();
+
+        $result = [
+          'message' => 'user removed'
+        ];
+        
+        return $this->responseApi($result);
+
+        // return $this->render('dashboard/remove-user.html.twig', [
+        //   'loggedUser' => $loggedUser
+        // ]);
+
+      }
     }
 
 }

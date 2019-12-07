@@ -4,12 +4,19 @@ namespace App\Entity\Petdb;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * User
  *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="email_UNIQUE", columns={"email"})})
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     errorPath="email",
+ *     message="Cette email est déjà utilisée."
+ * )
  */
 class User implements UserInterface 
 {
@@ -26,6 +33,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=45, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $firstname;
 
@@ -33,6 +41,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=45, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $lastname;
 
@@ -40,6 +49,11 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=155, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
+     * 
      */
     private $email;
 
@@ -47,13 +61,17 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=80, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $password;
+
+    private $plainPassword;
 
     /**
      * @var string
      *
      * @ORM\Column(name="street", type="string", length=155, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $street;
 
@@ -61,6 +79,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="zip", type="string", length=20, nullable=false)
+     * @Assert\Regex("/^[0-9]{5}$/")
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $zip;
 
@@ -68,6 +88,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="city", type="string", length=50, nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $city;
 
@@ -75,6 +96,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=45, nullable=false, options={"default"="France"})
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $country = 'France';
 
@@ -82,6 +104,7 @@ class User implements UserInterface
      * @var \DateTime
      *
      * @ORM\Column(name="birthday", type="date", nullable=false)
+     * @Assert\NotBlank(message="Ne peut être vide")
      */
     private $birthday;
 
@@ -281,7 +304,8 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials() {}
+    public function eraseCredentials() {
+    }
 
     public function getSalt() {}
 
